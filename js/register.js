@@ -1,24 +1,31 @@
-let loginForm;
-let submitButton;
-let emailInput;
-let pwdInput;
-let inputs;
-let errorElement;
-let loader;
+const domElements = {
+    form: 'form.signin',
+    submitButton: 'button[type="submit"]',
+    emailInput: 'input[name="email"]',
+    pwdInput: 'input[name="password"]',
+    errorElement: '#error-element',
+    loader: '.loader',
+    inputs: 'input[]',
+};
+
+const errorMessages = {
+    'auth/invalid-email': 'Email inválido',
+    'auth/email-already-in-use': 'Ese email ya ha sido registrado',
+    'auth/wrong-password': 'Datos incorrectos',
+    'auth/weak-password': 'La contraseña debe contener al menos 6 caracteres',
+    'auth/user-not-found': 'Datos incorrectos',
+    'auth/too-many-requests': 'Demasiados intentos, pruebe más tarde',
+};
 
 //Función que se ejecuta una vez que se haya lanzado el evento de
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
 document.addEventListener('DOMContentLoaded', function () {
-    loginForm = document.forms['login'];
-    submitButton = document.querySelector('button[type="submit"]');
-    emailInput = document.querySelector('input[name="email"]');
-    pwdInput = document.querySelector('input[name="password"]');
-    inputs = loginForm.getElementsByTagName('input');
-    errorElement = document.getElementById('error-element');
-    loader = document.querySelector('.loader');
+    selectDomElements(domElements, (element, idx) => {
+        window[idx] = element;
+    });
 
-    loginForm.addEventListener('submit', onSubmit);
+    form.addEventListener('submit', onSubmit);
 });
 
 function onSubmit(e) {
@@ -46,7 +53,8 @@ function onSubmit(e) {
             .catch(function (error) {
                 loadingOff();
 
-                showError('Formulario inválido');
+                console.log(error.code, error.message);
+                showError(errorMessages[error.code] || 'Formulario inválido');
             });
     }
 }
@@ -66,4 +74,19 @@ function loadingOff() {
     loader.style.opacity = 0;
     submitButton.style.backgroundColor = 'white';
     submitButton.style.boxShadow = 'none';
+}
+
+function selectDomElements(domElements, callback) {
+    for (element in domElements) {
+        let currentElement;
+        if (domElements[element].endsWith('[]')) {
+            currentElement = document.querySelectorAll(
+                domElements[element].slice(0, -2)
+            );
+        } else {
+            currentElement = document.querySelector(domElements[element]);
+        }
+
+        callback(currentElement, element);
+    }
 }
