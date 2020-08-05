@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
     logoutButton = document.querySelector('.logout-button');
 
     if (loggedText) {
-        const email = sessionStorage.getItem('loggedEmail');
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 loggedText.innerHTML = `Logeado como <i>${user.email}</i>`;
