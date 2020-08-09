@@ -1,5 +1,3 @@
-// Se que por seguridad no se deben colocar estas credenciales aquí
-// pero es solo para probar
 var firebaseConfig = {
     apiKey: 'AIzaSyDxigxs6XzzEWcPqdE18ALNFiJWxho0kH8',
     authDomain: 'ecommerce-jap.firebaseapp.com',
