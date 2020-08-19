@@ -179,3 +179,11 @@ a.custom-card:hover {
 .checked {
     color: orange;
 }
+
+.flippedIcon {
+    transform: scaleY(-1);
+}
+
+.fas {
+    transition: 200ms;
+}
