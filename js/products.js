@@ -1,6 +1,3 @@
-const ORDER_BY_PROD_SOLD_COUNT = 'Relevancia';
-const ORDER_BY_PROD_COST = 'Precio';
-
 class ProductsList {
     constructor(productsArray = []) {
         // ====== Propiedades de estado ======
