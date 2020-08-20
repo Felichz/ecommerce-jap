@@ -1,6 +1,7 @@
-const domElements = {
+const domSelectors = {
     form: 'form.signin',
     submitButton: 'button[type="submit"]',
+    demoLogin: '#demo-login',
     emailInput: 'input[name="email"]',
     pwdInput: 'input[name="password"]',
     errorElement: '#error-element',
@@ -19,11 +20,13 @@ const errorMessages = {
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
 document.addEventListener('DOMContentLoaded', function () {
-    selectDomElements(domElements, (element, idx) => {
+    selectDomElements(domSelectors, (element, idx) => {
         window[idx] = element;
     });
 
     form.addEventListener('submit', onSubmit);
+
+    demoLogin.addEventListener('click', onDemoLogin);
 });
 
 function onSubmit(e) {
@@ -44,18 +47,28 @@ function onSubmit(e) {
 
     if (!hasErrors) {
         loadingOn();
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(emailInput.value, pwdInput.value)
-            .then(() => {
-                loadingOff();
-            })
-            .catch(function (error) {
-                loadingOff();
-
-                showError(errorMessages[error.code] || 'Error');
-            });
+        login(emailInput.value, pwdInput.value);
     }
+}
+
+function onDemoLogin() {
+    demoLogin.style.backgroundColor = '#EEE';
+    demoLogin.style.boxShadow = '0px 0px 2px #AAA';
+    login('demo@demo.com', '123456');
+}
+
+function login(email, password) {
+    firebase
+        .auth()
+        .signInWithEmailAndPassword('demo@demo.com', '123456')
+        .then(() => {
+            loadingOff();
+        })
+        .catch(function (error) {
+            loadingOff();
+
+            showError(errorMessages[error.code] || 'Error');
+        });
 }
 
 function showError(message) {
