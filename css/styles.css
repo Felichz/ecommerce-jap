@@ -187,3 +187,13 @@ a.custom-card:hover {
 .fas {
     transition: 200ms;
 }
+
+#search {
+    display: initial;
+    width: initial;
+}
+
+#prod-list-container h2 {
+    margin: 30px 0;
+    text-align: center;
+}

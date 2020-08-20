@@ -21,6 +21,8 @@ class ProductsList {
                 sortProducts() {},
                 // Filtra dentro de un rango de precios.
                 filterByCost() {},
+                // Filtro del buscador
+                searchFilter() {},
             },
             // Captura cambios en el Objeto filters
             {
@@ -44,6 +46,9 @@ class ProductsList {
         this.costSortSwitch = true;
         this.soldCountSortSwitch = true;
 
+        // Input buscador
+        this.searchInput;
+
         // Container para mostrar los productos
         this.productsContainer;
 
@@ -51,6 +56,7 @@ class ProductsList {
         this.toggleCostSort = this.toggleCostSort.bind(this);
         this.toggleSoldCount = this.toggleSoldCount.bind(this);
         this.filterByCost = this.filterByCost.bind(this);
+        this.search = this.search.bind(this);
         this.cleanFilters = this.cleanFilters.bind(this);
 
         // ============= Lógica ==============
@@ -78,6 +84,9 @@ class ProductsList {
         this.minFilter = document.getElementById('rangeFilterCountMin');
         this.maxFilter = document.getElementById('rangeFilterCountMax');
 
+        // Input buscador
+        this.searchInput = document.getElementById('search');
+
         // ======== Preparar eventos =========
 
         // Clicks en botones de ordenamiento
@@ -94,6 +103,9 @@ class ProductsList {
             .getElementById('clearRangeFilter')
             .addEventListener('click', this.cleanFilters);
 
+        // Escribir en el buscador
+        this.searchInput.addEventListener('input', this.search);
+
         // Contenedor para mostrar productos
         this.productsContainer = document.getElementById('prod-list-container');
 
@@ -108,13 +120,13 @@ class ProductsList {
         // Obtener array filtrado
         const products = this.filterProducts();
 
-        // Solo se vuelve a renderizar si el array filtrado es distinto al anterior
-        this.filteredProducts = products;
+        if (!products.length) {
+            htmlContentToAppend = '<h2>No se encontraron coincidencias</h2>';
+        } else {
+            for (let i = 0; i < products.length; i++) {
+                let product = products[i];
 
-        for (let i = 0; i < products.length; i++) {
-            let product = products[i];
-
-            htmlContentToAppend += `
+                htmlContentToAppend += `
                 <div class="list-group-item list-group-item-action">
                     <div class="row">
                         <div class="col-3">
@@ -133,16 +145,15 @@ class ProductsList {
                     </div>
                 </div>
                 `;
+            }
         }
-
         // Animación de mostrar productos
         const transitionTime = 200;
 
         this.productsContainer.style.transition = `all ${transitionTime}ms`;
         this.productsContainer.style.opacity = '0.25';
         setTimeout(() => {
-            htmlContentToAppend &&
-                (this.productsContainer.innerHTML = htmlContentToAppend);
+            this.productsContainer.innerHTML = htmlContentToAppend;
             this.productsContainer.style.opacity = '1';
         }, transitionTime);
     }
@@ -171,8 +182,8 @@ class ProductsList {
         this.costSortSwitch = !this.costSortSwitch;
 
         // Agrega el filtro al objeto filters
-        this.filters.sortProducts = (toFilter) => {
-            return toFilter.sort(({ cost: a }, { cost: b }) =>
+        this.filters.sortProducts = (products) => {
+            return products.sort(({ cost: a }, { cost: b }) =>
                 this.costSortSwitch ? a < b : a > b
             );
         };
@@ -189,8 +200,8 @@ class ProductsList {
         this.soldCountSortSwitch = !this.soldCountSortSwitch;
 
         // Agrega el filtro al objeto filters
-        this.filters.sortProducts = (toFilter) => {
-            return toFilter.sort(({ soldCount: a }, { soldCount: b }) =>
+        this.filters.sortProducts = (products) => {
+            return products.sort(({ soldCount: a }, { soldCount: b }) =>
                 this.soldCountSortSwitch ? a > b : a < b
             );
         };
@@ -207,17 +218,40 @@ class ProductsList {
             maxValue = Infinity;
         }
 
-        this.filters.filterByCost = (toFilter) => {
-            return toFilter.filter(
+        this.filters.filterByCost = (products) => {
+            return products.filter(
                 ({ cost }) => minValue <= cost && maxValue >= cost
             );
         };
+    }
+
+    // Se busca en el título y la descripción de los artículos, ignorando
+    // mayúsculas, espacios, y acentos (tildes)
+    search() {
+        const searchString = this.searchInput.value
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+        // Agrega el filtro al objeto filters
+        this.filters.searchFilter = (products) =>
+            products.filter(
+                (product) =>
+                    (product.name + product.description)
+                        .toLowerCase()
+                        .replace(/\s+/g, '')
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .search(searchString) >= 0
+            );
     }
 
     // Reiniciar todo a default
     cleanFilters() {
         this.minFilter.value = '';
         this.maxFilter.value = '';
+        this.searchInput.value = '';
 
         this.costSortSwitch = true;
         this.costIcon.style.transform = 'scaleY(-1)';
@@ -229,6 +263,7 @@ class ProductsList {
 
         this.filters.sortProducts = () => {};
         this.filters.filterByCost = () => {};
+        this.filters.searchFilter = () => {};
     }
 }
 
