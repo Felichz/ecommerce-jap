@@ -1,3 +1,10 @@
+// Esperamos a que llegue el JSON y luego instanciamos ProductsList
+getJSONData(PRODUCTS_URL).then(function (products) {
+    if (products.status === 'ok') {
+        new ProductsList(products.data);
+    }
+});
+
 class ProductsList {
     constructor(productsArray = []) {
         // ====== Propiedades de estado ======
@@ -273,10 +280,3 @@ class ProductsList {
         this.filters.searchFilter = () => {};
     }
 }
-
-// Esperamos a que llegue el JSON y luego instanciamos ProductsList
-getJSONData(PRODUCTS_URL).then(function (products) {
-    if (products.status === 'ok') {
-        new ProductsList(products.data);
-    }
-});
