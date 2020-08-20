@@ -1,5 +1,5 @@
-// firebase.auth().onAuthStateChanged((user) => {
-//     if (!user) {
-//         window.location = 'login.html';
-//     }
-// });
+firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+        window.location = 'login.html';
+    }
+});
