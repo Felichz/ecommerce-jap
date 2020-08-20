@@ -207,6 +207,7 @@ class ProductsList {
         };
     }
 
+    // Filtro por rango de precio
     filterByCost() {
         let minValue = this.minFilter.value;
         let maxValue = this.maxFilter.value;
@@ -218,6 +219,7 @@ class ProductsList {
             maxValue = Infinity;
         }
 
+        // Agrega el filtro al objeto filters
         this.filters.filterByCost = (products) => {
             return products.filter(
                 ({ cost }) => minValue <= cost && maxValue >= cost
@@ -238,11 +240,16 @@ class ProductsList {
         this.filters.searchFilter = (products) =>
             products.filter(
                 (product) =>
+                    // Juntar strings de título y descripción
                     (product.name + product.description)
+                        // Pasar a minúsculas
                         .toLowerCase()
+                        // Quitar espacios
                         .replace(/\s+/g, '')
+                        // Quitar tildes
                         .normalize('NFD')
                         .replace(/[\u0300-\u036f]/g, '')
+                        // Búsqueda
                         .search(searchString) >= 0
             );
     }
