@@ -78,43 +78,40 @@ class ProductsList {
         // Operaciones del DOM
 
         // ====== Seleccionar elementos ======
+        const s = document.querySelector.bind(document);
 
         // Icono del sort por precio
-        const sortByCost = document.getElementById('sortByCost');
-        this.costIcon = sortByCost.querySelector('.fas');
+        const sortByCost = s('#sortByCost');
+        this.costIcon = s('#sortByCost .fas');
 
         // Icono del sort por relevancia
-        const sortBySoldCount = document.getElementById('sortBySoldCount');
-        this.soldCountIcon = sortBySoldCount.querySelector('.fas');
+        const sortBySoldCount = s('#sortBySoldCount');
+        this.soldCountIcon = s('#sortBySoldCount .fas');
 
         // Inputs de filtro por precio
-        this.minFilter = document.getElementById('rangeFilterCountMin');
-        this.maxFilter = document.getElementById('rangeFilterCountMax');
+        this.minFilter = s('#rangeFilterCountMin');
+        this.maxFilter = s('#rangeFilterCountMax');
 
         // Input buscador
-        this.searchInput = document.getElementById('search');
+        this.searchInput = s('#search');
+
+        // Contenedor para mostrar productos
+        this.productsContainer = s('#prod-list-container');
 
         // ======== Preparar eventos =========
 
         // Clicks en botones de ordenamiento
-        sortByCost.addEventListener('click', this.toggleCostSort);
-        sortBySoldCount.addEventListener('click', this.toggleSoldCount);
+        sortByCost.onclick = this.toggleCostSort;
+        sortBySoldCount.onclick = this.toggleSoldCount;
 
         // Click en botón filtrar
-        document
-            .getElementById('rangeFilterCount')
-            .addEventListener('click', this.filterByCost);
+        s('#rangeFilterCount').onclick = this.filterByCost;
 
         // Click en botón limpiar
-        document
-            .getElementById('clearRangeFilter')
-            .addEventListener('click', this.cleanFilters);
+        s('#clearRangeFilter').onclick = this.cleanFilters;
 
         // Escribir en el buscador
-        this.searchInput.addEventListener('input', this.search);
-
-        // Contenedor para mostrar productos
-        this.productsContainer = document.getElementById('prod-list-container');
+        this.searchInput.oninput = this.search;
 
         // Render inicial de la lista
         this.renderProducts();
