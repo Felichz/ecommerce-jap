@@ -131,23 +131,25 @@ class ProductsList {
                 let product = products[i];
 
                 htmlContentToAppend += `
-                <div class="list-group-item list-group-item-action">
-                    <div class="row">
-                        <div class="col-3">
-                            <img src="${product.imgSrc}" class="img-thumbnail">
-                        </div>
-                        <div class="col">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h4 class="mb-1">${product.name}</h4>
-                                <small class="font-muted">
-                                    <b>${product.currency} $${product.cost}</b><br>
-                                    ${product.soldCount} artículos vendidos
-                                </small>
+                <a href="product-info.html">
+                    <div class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="${product.imgSrc}" class="img-thumbnail">
                             </div>
-                            ${product.description}
+                            <div class="col">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mb-1">${product.name}</h4>
+                                    <small class="font-muted">
+                                        <b>${product.currency} $${product.cost}</b><br>
+                                        ${product.soldCount} artículos vendidos
+                                    </small>
+                                </div>
+                                ${product.description}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
                 `;
             }
         }
