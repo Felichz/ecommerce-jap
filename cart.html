@@ -9,6 +9,11 @@
   <meta name="description" content="">
   <title>eMercado - Todo lo que busques está aquí</title>
 
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+  <script src="js/utils/initFirebase.js"></script>
+  <script src="js/utils/mustBeLogged.js"></script>
+
   <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/album/">
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
 
@@ -61,15 +66,20 @@
     </div>
     </div>
   </nav>
-  <div class="container p-5">
-    <div class="alert alert-danger" role="alert" style="position: relative; width:auto; top: 0;">
-      <h4 class="alert-heading">¡A trabajar! :)</h4>
-      <p>Esta sección corresponde a: Entrega 5 (Fecha de entrega: 11/10/2020) y Entrega 6 (Fecha de entrega:
-        25/10/2020).</p>
-      <hr>
-      <p class="mb-0">Para saber qué debes hacer, fijate en la actividad en CREA correspondiente a esta entrega.</p>
-    </div>
+  <div class="text-center p-4">
+    <h2>Carrito</h2>
+    <p class="lead">Tus productos pendientes de compra.</p>
   </div>
+
+  <div id="cart">
+    <p>Cantidad de productos: <span id="total-product-count">0</span></p>
+    <ul id="cart-products">
+    </ul>
+    <b>
+      <p>Total: <span id="cart-total">0</span></p>
+    </b>
+  </div>
+
   <div id="spinner-wrapper">
     <div class="lds-ring">
       <div></div>
