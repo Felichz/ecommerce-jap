@@ -1,3 +1,17 @@
+#product-info-section {
+    display: flex;
+    margin-bottom: 25px;
+}
+
+#product-info-section #product-images-carousel {
+    min-width: 500px;
+    margin-right: 25px;
+}
+
+#comment-form {
+    margin-top: 25px;
+}
+
 #comments-container {
     max-width: 700px;
     margin: 30px;

@@ -54,7 +54,7 @@ var getJSONData = function (url) {
 //elementos HTML presentes.
 document.addEventListener('DOMContentLoaded', function (e) {
     loggedText = document.querySelector('.logged-as span');
-    logoutButton = document.querySelector('.logout-button');
+    logoutButton = document.querySelector('#logout-button');
 
     if (loggedText) {
         firebase.auth().onAuthStateChanged(function (user) {

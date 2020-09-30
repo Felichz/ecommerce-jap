@@ -4,13 +4,17 @@ const productNameHTML = s('#productName'),
     productDescriptionHTML = s('#productDescription'),
     productCostHTML = s('#productCost'),
     productSoldCountHTML = s('#productSoldCount'),
-    productImagesGallery = s('#productImagesGallery');
+    relatedProductsGallery = s('#related-products-gallery'),
+    carouselIndicators = s('#product-images-carousel .carousel-indicators'),
+    carouselImages = s('#product-images-carousel .carousel-inner');
 
 const commentList = s('#comment-list'),
     commentForm = s('#comment-form'),
     userNameInput = commentForm['user-name'],
     commentContentInput = commentForm['comment-content'],
-    commentStarButtons = document.querySelectorAll('#user-review-stars .fa-star');
+    commentStarButtons = document.querySelectorAll(
+        '#user-review-stars .fa-star'
+    );
 
 let selectedScore = 0;
 
@@ -25,16 +29,16 @@ for (let [idx, star] of commentStarButtons.entries()) {
         for (let star of commentStarButtons) {
             star.classList.remove('checked');
         }
-        
+
         clickedStar.parentElement.classList.add('checked');
         clickedStar.classList.add('checked');
 
         selectedScore = idx + 1;
-    }
+    };
 }
 
 function resetStars() {
-    commentStarButtons[0].parentElement.classList.remove('checked')
+    commentStarButtons[0].parentElement.classList.remove('checked');
 
     for (let star of commentStarButtons) {
         star.classList.remove('checked');
@@ -88,24 +92,54 @@ function unstoreComment(id) {
     renderComments();
 }
 
-function showImagesGallery(array) {
+function showImagesGallery(imageList) {
+    // <li data-target="#carouselIndicators" data-slide-to="0" class="active"></li>
+    // <li data-target="#carouselIndicators" data-slide-to="1"></li>
+    // <li data-target="#carouselIndicators" data-slide-to="2"></li>
+    let carouselIndicatorsHtml = '';
+    let carouselImagesHtml = '';
+
+    imageList.forEach((image, idx) => {
+        console.log(image, idx);
+        carouselIndicatorsHtml += `
+            <li
+                data-target="#product-images-carousel"
+                data-slide-to="${idx}"
+                ${!idx ? 'class="active"' : ''}
+            ></li>
+        `;
+
+        carouselImagesHtml += `
+            <div class="carousel-item ${!idx ? 'active' : ''}">
+                <img src="${image}" class="d-block w-100" alt="Product carousel">
+            </div>
+        `;
+    });
+
+    carouselIndicators.innerHTML = carouselIndicatorsHtml;
+
+    carouselImages.innerHTML = carouselImagesHtml;
+}
+
+function showRelatedProducts(array) {
+    console.log(array);
+
     let htmlContentToAppend = '';
 
     for (let i = 0; i < array.length; i++) {
-        let imageSrc = array[i];
+        let imageSrc = array[i].imgSrc;
 
-        htmlContentToAppend +=
-            `
+        htmlContentToAppend += `
         <div class="col-lg-3 col-md-4 col-6">
             <div class="d-block mb-4 h-100">
-                <img class="img-fluid img-thumbnail" src="` +
-            imageSrc +
-            `" alt="">
+                <a href="#">
+                    <img class="img-fluid img-thumbnail" src="${imageSrc}" alt="">
+                </a>
             </div>
         </div>
         `;
 
-        productImagesGallery.innerHTML = htmlContentToAppend;
+        relatedProductsGallery.innerHTML = htmlContentToAppend;
     }
 }
 
@@ -176,9 +210,10 @@ getJSONData(PRODUCT_INFO_URL).then(function (resultObj) {
         productCostHTML.innerHTML = `${product.currency} ${product.cost}`;
         productSoldCountHTML.innerHTML = product.soldCount;
 
-
         //Muestro las imagenes en forma de galería
         showImagesGallery(product.images);
+
+        fetchRelatedProducts(product.relatedProducts).then(showRelatedProducts);
     }
 });
 
@@ -187,3 +222,9 @@ getJSONData(PRODUCT_INFO_COMMENTS_URL).then((result) => {
 
     renderComments();
 });
+
+async function fetchRelatedProducts(relatedProducts) {
+    const { data } = await getJSONData(PRODUCTS_URL);
+
+    return relatedProducts.map((id) => data[id]);
+}
